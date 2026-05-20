@@ -2,37 +2,20 @@ name: release
 
 on:
   push:
-    branches:
-      - master
-    paths:
-      - .github/workflows/release.yaml
-      - pkg/**
-      - go.*
     tags:
       - v*
-  pull_request:
-    branches:
-      - master
-    paths:
-      - .github/workflows/release.yaml
-      - pkg/**
-      - go.*
 
-concurrency:
-  cancel-in-progress: true
-  group: ${{ github.workflow }}--${{ github.ref }}
+permissions:
+  contents: write
 
 jobs:
   create:
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     outputs:
       draft-release-name: ${{ steps.create-draft-release.outputs.draft-release-name }}
-    permissions:
-      contents: write
     steps:
-      - if: github.event_name == 'push'
-        id: create-draft-release
+      - id: create-draft-release
         uses: int128/go-release-action/create-draft-release@9e1d6ec29fc6ffc2ba55f631baf4a73017d228e1 # v2.5.0
 
   build:
